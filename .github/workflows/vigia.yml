@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       prueba:
-        description: "Mandar un WhatsApp de prueba"
+        description: "Probar el aviso (la corrida falla a propósito)"
         type: boolean
         default: false
 permissions:
@@ -27,10 +27,9 @@ jobs:
           path: estado
           key: estado-${{ github.run_id }}
           restore-keys: estado-
+      # si el portal está caído (o es una prueba) este paso falla y GitHub avisa al dueño por correo y en su app
       - name: Revisar el portal
         env:
-          CALLMEBOT_TELEFONO: ${{ secrets.CALLMEBOT_TELEFONO }}
-          CALLMEBOT_CLAVE: ${{ secrets.CALLMEBOT_CLAVE }}
           PRUEBA: ${{ inputs.prueba && '1' || '0' }}
         run: python3 vigia.py
       - uses: actions/cache/save@v4
